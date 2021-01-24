@@ -26,7 +26,7 @@
         required: false,
         validate: function(v) {
           const number = Number(v);
-          return !isNan(number) && number >= (-12 * 60 * 60) && number <= (12 * 60 * 60);
+          return !isNaN(number) && number >= (-12 * 60 * 60) && number <= (12 * 60 * 60);
         },
       },
     },
@@ -37,7 +37,23 @@
       if (this.name) {
         return this.name;
       }
-      return this.event;
+      const offsetNumber = Number(this.offset);
+      if (isNaN(offsetNumber) || offsetNumber == 0) {
+        return this.event;
+      }
+      let offsetString = offsetNumber > 0 ? ' + ' : ' - ';
+      const absOffset = Math.abs(offsetNumber);
+      const hours = Math.floor(absOffset / 60 / 60);
+      const minutes = Math.floor(absOffset / 60) % 60;
+      const seconds = absOffset % 60;
+      if (hours > 0) {
+        offsetString = offsetString + hours.toString() + 'h';
+      }
+      if (minutes > 0 || hours > 0) {
+        offsetString = offsetString + minutes.toString() + 'm';
+      }
+      offsetString = offsetString + seconds.toString() + 's';
+      return this.event + offsetString;
     },
     button: {
       enabled: function() {
