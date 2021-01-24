@@ -114,3 +114,103 @@
     <input type="text" id="node-input-offset" placeholder="seconds">
   </div>
 </script>
+
+<script type="text/html" data-help-name="sun-event-inject">
+  <p>
+    This node calculates the time of next occurrence of a given sun event at a given geographical
+    location and injects a message into the flow at the calculated time. The node allows to
+    configure a time offset (either negative or positive) for the injection time. The structure of
+    the injected message is <code>{"payload": ${event}, "offset": ${offset_in_seconds}}</code>,
+    where:
+    <ul>
+      <li>
+        <code>event</code> is the sun event name that caused the message injection and
+      </li>
+      <li>
+        <code>offset_in_seconds</code> is the time offset in second at the moment of message
+        injection, to the actual event occurrence time. May be negative or positive.
+      </li>
+    </ul>
+  </p>
+  <p>
+    Configuration:
+    <ul>
+      <li>
+        <b>Latitude</b> - (mandatory) latitude coordinate in degrees indicating the geographical
+        location.
+      </li>
+      <li>
+        <b>Longitude</b> - (mandatory) longitude coordinate in degrees indicating the geographical
+        location.
+      </li>
+      <li>
+        <b>Sun event</b> - (mandatory) the sun event which will be the trigger source of the
+        message. Supported events are:
+        <ul>
+          <li>
+            <b>Sunrise</b> - sunrise (top edge of the sun appears on the horizon). Event name in
+            message payload: <code>sunrise</code>.
+          </li>
+          <li>
+            <b>Sunrise end</b> - sunrise ends (bottom edge of the sun touches the horizon). Event
+            name in message payload: <code>sunriseEnd</code>.
+          </li>
+          <li>
+            <b>Golden hour end</b> - morning golden hour (soft light, best time for photography)
+            ends. Event name in message payload: <code>goldenHourEnd</code>.
+          </li>
+          <li>
+            <b>Solar noon</b> - solar noon (sun is in the highest position). Event name in message
+            payload: <code>solarNoon</code>.
+          </li>
+          <li>
+            <b>Golden hour</b> - evening golden hour starts. Event name in message payload:
+            <code>goldenHour</code>.
+          </li>
+          <li>
+            <b>Sunset start</b> - sunset starts (bottom edge of the sun touches the horizon). Event
+            name in message payload: <code>sunsetStart</code>.
+          </li>
+          <li>
+            <b>Sunset</b> - sunset (sun disappears below the horizon, evening civil twilight
+            starts). Event name in message payload: <code>sunset</code>.
+          </li>
+          <li>
+            <b>Dusk</b> - dusk (evening nautical twilight starts). Event name in message payload:
+            <code>dusk</code>.
+          </li>
+          <li>
+            <b>Nautical dusk</b> - nautical dusk (evening astronomical twilight starts). Event name
+            in message payload: <code>nauticalDusk</code>.
+          </li>
+          <li>
+            <b>Night</b> - night starts (dark enough for astronomical observations). Event name in
+            message payload: <code>night</code>.
+          </li>
+          <li>
+            <b>Nadir</b> - nadir (darkest moment of the night, sun is in the lowest position). Event
+            name in message payload: <code>nadir</code>.
+          </li>
+          <li>
+            <b>Night end</b> - night ends (morning astronomical twilight starts). Event name in
+            message payload: <code>nightEnd</code>.
+          </li>
+          <li>
+            <b>Nautical dawn</b> - nautical dawn (morning nautical twilight starts). Event name in
+            message payload: <code>nauticalDawn</code>.
+          </li>
+          <li>
+            <b>Dawn</b> - dawn (morning nautical twilight ends, morning civil twilight starts).
+            Event name in message payload: <code>dawn</code>.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <b>Offset</b> - (optional) time offset in seconds between the time of message injection and
+        the actual time of the event occurrence. A negative value means that the message will be
+        injected before the sun event occurrence, a positive value means after. By default, the
+        message will be injected at the sun event occurrence time.
+      </li>
+    </ul>
+  </p>
+</script>
