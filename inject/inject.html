@@ -1,0 +1,116 @@
+<script type="text/javascript">
+  RED.nodes.registerType('sun-event-inject', {
+    category: 'common',
+    color: '#a6bbcf',
+    defaults: {
+      name: {value: ''},
+      latitude: {
+        value: '0',
+        required: true,
+        validate: function(v) {
+          const number = Number(v);
+          return !isNaN(number) && number >= -90 && number <= 90;
+        },
+      },
+      longitude: {
+        value: '0',
+        required: true,
+        validate: function(v) {
+          const number = Number(v);
+          return !isNaN(number) && number >=-180 && number <= 180;
+        },
+      },
+      event: {value: 'sunrise', required: true},
+      offset: {
+        value: '0',
+        required: false,
+        validate: function(v) {
+          const number = Number(v);
+          return !isNan(number) && number >= (-12 * 60 * 60) && number <= (12 * 60 * 60);
+        },
+      },
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: 'inject.svg',
+    label: function() {
+      if (this.name) {
+        return this.name;
+      }
+      return this.event;
+    },
+    button: {
+      enabled: function() {
+        return !this.changed;
+      },
+      onclick: function() {
+        if (this.changed) {
+          return RED.notify('<strong>Warning</strong>: node has undeployed changes', 'warning');
+        }
+        let label = this._def.label.call(this);
+        if (label.length > 30) {
+          label = label.substring(0, 30) + '...';
+        }
+        label = label.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        $.ajax({
+          url: 'sun-event-inject/' + this.id,
+          type: 'POST',
+          success: function(resp) {
+            RED.notify(`Successfully injected: ${label}`, 'success');
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status == 404) {
+              RED.notify('<strong>Error</strong>: node not deployed', 'error');
+            } else if (jqXHR.status == 500) {
+              RED.notify('<strong>Error</strong>: inject failed, see log for details', 'error');
+            } else if (jqXHR.status == 0) {
+              RED.notify('<strong>Error</strong>: no response from server', 'error');
+            } else {
+              RED.notify(
+                  `<strong>Error</strong>: unexpected error (${jqXHR.status}): ${textStatus}`,
+                  'error')
+              ;
+            }
+          },
+        });
+      },
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="sun-event-inject">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-latitude"><i class="fa fa-tag"></i> Latitude</label>
+    <input type="text" id="node-input-latitude" placeholder="Latitude">
+  </div>
+  <div class="form-row">
+    <label for="node-input-longitude"><i class="fa fa-tag"></i> Longitude</label>
+    <input type="text" id="node-input-longitude" placeholder="Latitude">
+  </div>
+  <div class="form-row">
+    <label for="node-input-event"><i class="fa fa-tag"></i> Sun event</label>
+    <select id="node-input-event">
+      <option value="sunrise">Sunrise</option>
+      <option value="sunriseEnd">Sunrise end</option>
+      <option value="goldenHourEnd">Golden hour end</option>
+      <option value="solarNoon">Solar noon</option>
+      <option value="goldenHour">Golden hour</option>
+      <option value="sunsetStart">Sunset start</option>
+      <option value="sunset">Sunset</option>
+      <option value="dusk">Dusk</option>
+      <option value="nauticalDusk">Nautical dusk</option>
+      <option value="nadir">Nadir</option>
+      <option value="nightEnd">Night end</option>
+      <option value="nauticalDawn">Nautical dawn</option>
+      <option value="dawn">Dawn</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-offset"><i class="fa fa-tag"></i> Offset (seconds)</label>
+    <input type="text" id="node-input-offset" placeholder="seconds">
+  </div>
+</script>
