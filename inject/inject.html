@@ -149,7 +149,8 @@ containing times of all sun events for the day.">
     This node calculates the time of next occurrence of a given sun event at a given geographical
     location and injects a message into the flow at the calculated time. The node allows to
     configure a time offset (either negative or positive) for the injection time. The structure of
-    the injected message is <code>{"payload": ${event}, "offset": ${offset_in_seconds}}</code>,
+    the injected message is
+    <code>{"payload": {sunEvent: ${event}, "offset": ${offset_in_seconds}}}</code>,
     where:
     <ul>
       <li>
