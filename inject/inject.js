@@ -25,6 +25,7 @@ module.exports = function(RED) {
     node.longitude = config.longitude;
     node.event = config.event;
     node.offset = config.offset || 0;
+    node.injectEventTimesAfterStartup = config.injectEventTimesAfterStartup || false;
     node.timeout = setTimeout(timeoutHandler.bind(node), calculateDelay.apply(node));
     node.on('input', function(msg, send, done) {
       const offset = Math.round(-calculateDelay.apply(node) / 1000) - node.offset;
@@ -41,6 +42,14 @@ module.exports = function(RED) {
     node.on('close', function() {
       clearTimeout(node.timeout);
     });
+    if (node.injectEventTimesAfterStartup) {
+      setTimeout(
+          function() {
+            node.send({payload: sunCalc.getTimes(Date.now(), node.latitude, node.longitude)});
+          },
+          1000,
+      );
+    }
   }
   RED.nodes.registerType('sun-event-inject', InjectNode);
 

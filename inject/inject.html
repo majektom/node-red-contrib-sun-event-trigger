@@ -29,6 +29,10 @@
           return !isNaN(number) && number >= (-12 * 60 * 60) && number <= (12 * 60 * 60);
         },
       },
+      injectEventTimesAfterStartup: {
+        value: false,
+        required: false,
+      },
     },
     inputs: 0,
     outputs: 1,
@@ -129,6 +133,15 @@
     <label for="node-input-offset"><i class="fa fa-tag"></i> Offset (seconds)</label>
     <input type="text" id="node-input-offset" placeholder="seconds">
   </div>
+  <div class="form-row" title="If checked, the node will inject one message, shortly after startup,
+containing times of all sun events for the day.">
+    <input type="checkbox" id="node-input-injectEventTimesAfterStartup" style="width: 30px;"
+           value="">
+    <label class="form-check-label" for="node-input-injectEventTimesAfterStartup">
+      Inject&nbsp;all&nbsp;event&nbsp;times&nbsp;after&nbsp;startup
+    </label>
+  </div>
+  </div>
 </script>
 
 <script type="text/html" data-help-name="sun-event-inject">
@@ -226,6 +239,11 @@
         the actual time of the event occurrence. A negative value means that the message will be
         injected before the sun event occurrence, a positive value means after. By default, the
         message will be injected at the sun event occurrence time.
+      </li>
+      <li>
+        <b>Inject all event times after startup</b> - if checked, the node will inject one message,
+        shortly after startup, containing times of all sun events for the day in the payload
+        property.
       </li>
     </ul>
   </p>

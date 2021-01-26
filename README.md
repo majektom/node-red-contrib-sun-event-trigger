@@ -20,8 +20,14 @@ npm install node-red-contrib-sun-event-trigger
 ## Usage
 
 Use the node in the same way as you would use the standard node-red's inject node. For example:
+
 ![inject example](https://github.com/majektom/node-red-contrib-sun-event-trigger/raw/master/doc/images/inject-example.png "Inject example flow")
 
 ## Configuration
 
 See the node's help page in the node-red's admin panel for exhaustive information.
+
+## Appreciation
+
+If you want to say thank you by donation, you can do it here:
+[![Donate](https://www.paypalobjects.com/en_US/PL/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?hosted_button_id=7DQMX6KQZ8R42)
